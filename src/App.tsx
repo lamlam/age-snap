@@ -18,6 +18,10 @@ function App() {
         name="長男"
         birthDate={zonedTimeToUtc('2021-08-10 00:00:00.000', 'Asia/Tokyo')}
       />
+      <Person
+        name="次男"
+        birthDate={zonedTimeToUtc('2023-06-13 00:00:00.000', 'Asia/Tokyo')}
+      />
     </>
   );
 }
