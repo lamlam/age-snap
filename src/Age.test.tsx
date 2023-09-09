@@ -12,20 +12,23 @@ describe('test Age Component', () => {
     vi.useRealTimers();
   });
 
-  test('太郎が描画されている', () => {
-    render(<Age name="太郎" birthDate={new Date('2021-08-10T03:24:00')} />);
-    screen.debug();
-    expect(screen.getByText('太郎')).toBeInTheDocument();
-  });
+  const ageNodeInYearIndex = 0;
+  const ageNodeInMonthIndex = 1;
+  const ageNodeInWeekIndex = 2;
+  const ageNodeInDayIndex = 3;
 
-  test('1歳の誕生日に1歳が描画されている', () => {
+  test('1歳の誕生日にそれぞれの単位で正しい年齢が描画されている', () => {
     // set date to 2022/8/10
     const date = new Date('2022-08-10T00:00:00Z');
     vi.setSystemTime(date);
 
-    render(<Age name="太郎" birthDate={new Date('2021-08-10T00:00:00Z')} />);
+    render(<Age birthDate={new Date('2021-08-10T00:00:00Z')} />);
     screen.debug();
-    expect(screen.getByText('1歳')).toBeInTheDocument();
+    const nodes = screen.getAllByRole('listitem');
+    expect(nodes[ageNodeInYearIndex]).toHaveTextContent('1歳');
+    expect(nodes[ageNodeInMonthIndex]).toHaveTextContent('12ヶ月');
+    expect(nodes[ageNodeInWeekIndex]).toHaveTextContent('52週');
+    expect(nodes[ageNodeInDayIndex]).toHaveTextContent('365日');
   });
 
   test('1歳の誕生日の前日に0歳が描画されている', () => {
@@ -33,8 +36,26 @@ describe('test Age Component', () => {
     const date = new Date('2022-08-09T00:00:00Z');
     vi.setSystemTime(date);
 
-    render(<Age name="太郎" birthDate={new Date('2021-08-10T00:00:00Z')} />);
+    render(<Age birthDate={new Date('2021-08-10T00:00:00Z')} />);
     screen.debug();
-    expect(screen.getByText('0歳')).toBeInTheDocument();
+    const nodes = screen.getAllByRole('listitem');
+    expect(nodes[ageNodeInYearIndex]).toHaveTextContent('0歳');
+    expect(nodes[ageNodeInMonthIndex]).toHaveTextContent('12ヶ月');
+    expect(nodes[ageNodeInWeekIndex]).toHaveTextContent('52週');
+    expect(nodes[ageNodeInDayIndex]).toHaveTextContent('364日');
+  });
+
+  test('生誕日に0歳が描画されている', () => {
+    // set date to 2022/8/9
+    const date = new Date('2022-08-09T00:00:00Z');
+    vi.setSystemTime(date);
+
+    render(<Age birthDate={new Date('2022-08-09T00:00:00Z')} />);
+    screen.debug();
+    const nodes = screen.getAllByRole('listitem');
+    expect(nodes[ageNodeInYearIndex]).toHaveTextContent('0歳');
+    expect(nodes[ageNodeInMonthIndex]).toHaveTextContent('0ヶ月');
+    expect(nodes[ageNodeInWeekIndex]).toHaveTextContent('0週');
+    expect(nodes[ageNodeInDayIndex]).toHaveTextContent('0日');
   });
 });

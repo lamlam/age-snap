@@ -1,16 +1,44 @@
 import { formatDistanceStrict } from 'date-fns';
 
-export function Age(props: { name: string; birthDate: Date }) {
+export function Age(props: { birthDate: Date }) {
   const now = new Date();
-  const age = formatDistanceStrict(now, props.birthDate, {
+  // Calculate age in year unit and return string in "1 year" format
+  const yearFormatString: string = formatDistanceStrict(now, props.birthDate, {
     unit: 'year',
     roundingMethod: 'floor',
-  }).split(' ')[0];
+  });
+  const age = Number(yearFormatString.split(' ')[0]);
+  if (isNaN(age)) {
+    return <div>Invalid Date</div>;
+  }
+
+  // Calculate age in month unit and return string in "1 month" format
+  const monthFormatString: string = formatDistanceStrict(now, props.birthDate, {
+    unit: 'month',
+    roundingMethod: 'floor',
+  });
+  console.log(monthFormatString);
+  const ageInMonth = Number(monthFormatString.split(' ')[0]);
+  if (isNaN(ageInMonth)) {
+    return <div>Invalid Date</div>;
+  }
+
+  // Calculate age in day unit and return string in "1 day" format
+  const dayFormatString: string = formatDistanceStrict(now, props.birthDate, {
+    unit: 'day',
+    roundingMethod: 'floor',
+  });
+  const ageInDay = Number(dayFormatString.split(' ')[0]);
+  if (isNaN(ageInDay)) {
+    return <div>Invalid Date</div>;
+  }
 
   return (
-    <div>
-      <h2>{props.name}</h2>
-      <div>{age}歳</div>
-    </div>
+    <ul>
+      <li>{age}歳</li>
+      <li>{ageInMonth}ヶ月</li>
+      <li>{Math.trunc(ageInDay / 7)}週</li>
+      <li>{ageInDay}日</li>
+    </ul>
   );
 }
