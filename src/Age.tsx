@@ -17,10 +17,12 @@ export function Age(props: { birthDate: Date }) {
     unit: 'month',
     roundingMethod: 'floor',
   });
-  console.log(monthFormatString);
-  const ageInMonth = Number(monthFormatString.split(' ')[0]);
+  let ageInMonth = Number(monthFormatString.split(' ')[0]);
   if (isNaN(ageInMonth)) {
     return <div>Invalid Date</div>;
+  }
+  if (now.getDate() < props.birthDate.getDate()) {
+    ageInMonth -= 1;
   }
 
   // Calculate age in day unit and return string in "1 day" format
